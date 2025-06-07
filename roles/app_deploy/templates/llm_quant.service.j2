@@ -1,0 +1,15 @@
+[Unit]
+Description=LLM Quant Assistant Service
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/llm-quant
+ExecStart=/usr/local/bin/docker-compose up -d
+ExecStop=/usr/local/bin/docker-compose down
+RemainAfterExit=yes
+User=ubuntu
+
+[Install]
+WantedBy=multi-user.target
