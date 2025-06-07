@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quant-llm-assistant
+  labels:
+    app: quant-llm-assistant
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: quant-llm-assistant
+  template:
+    metadata:
+      labels:
+        app: quant-llm-assistant
+    spec:
+      containers:
+      - name: assistant
+        image: quant-llm-assistant:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: quant-llm-secrets
+              key: openai_api_key
+        - name: DATA_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: quant-llm-secrets
+              key: data_api_key
+        # Example default args; override in your Job/Pod spec as needed
+        args: ["--query", "Show me AAPL daily volatility for the last month"]
+
+git add k8s/deployment.yaml
+git commit -m "Add Kubernetes Deployment manifest"
