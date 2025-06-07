@@ -1,0 +1,32 @@
+---
+- name: Ensure app directory exists
+  file:
+    path: /opt/llm-quant
+    state: directory
+    owner: ubuntu
+
+- name: Pull latest LLM Quant Assistant code
+  git:
+    repo: https://github.com/Trojan3877/LLM-Quant-Assistant.git
+    dest: /opt/llm-quant
+    version: main
+    force: yes
+  become_user: ubuntu
+
+- name: Copy systemd service unit
+  template:
+    src: llm_quant.service.j2
+    dest: /etc/systemd/system/llm_quant.service
+    mode: '0644'
+
+- name: Reload systemd & start service
+  systemd:
+    name: llm_quant
+    state: restarted
+    enabled: yes
+
+- name: Launch Docker Compose stack
+  community.docker.docker_compose:
+    project_src: /opt/llm-quant
+    state: present
+    restarted: yes
