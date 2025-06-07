@@ -26,6 +26,32 @@ A Python tool that leverages large language models to fetch, analyze, and report
 - **Extensible Architecture**  
   Modular code: swap in new data sources, customize analysis routines, or add plotting capabilities.
 
+quant-llm-assistant/
+├── .github/            # GitHub Actions & templates
+├── k8s/                # Kubernetes manifests
+├── helm/               # Helm chart
+├── notebooks/          # Example Jupyter workflows
+├── docs/               # MkDocs documentation
+├── src/                # Source code modules
+├── tests/              # Pytest suites
+├── .dockerignore
+├── .env.example
+├── .gitignore
+├── CHANGELOG.md
+├── CONTRIBUTING.md
+├── CODE_OF_CONDUCT.md
+├── Dockerfile
+├── Makefile
+├── mkdocs.yml
+├── README.md
+└── requirements.txt
+
+
+
+
+
+
+
 ---
 
 ## 📦 Installation
