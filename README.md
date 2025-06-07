@@ -6,21 +6,6 @@
 A Python tool that leverages large language models to fetch, analyze, and report on financial market data via natural-language prompts. Ideal for quant analysts, data scientists, and anyone wanting ad-hoc financial insights.
 
 ---
-quant-llm-assistant/
-├── .env.example
-├── LICENSE
-├── README.md
-├── requirements.txt
-└── src/
-    ├── config.py       # Loads environment variables
-    ├── data_client.py  # Market data API wrapper
-    ├── llm_agent.py    # LLM integration (LangChain/OpenAI)
-    └── main.py         # CLI/demo script
-
-
-
-
-
 
 ## 🚀 Features
 
@@ -44,13 +29,3 @@ quant-llm-assistant/
    ```bash
    git clone git@github.com:Trojan3877/quant-llm-assistant.git
    cd quant-llm-assistant
-
-
-
-
-
-
-
-
-# QUANT-LLM-ASSISTANT
-LLM-powered Quantitative research assistant which combines financial data, quantitative models, and natural laungage generation to produce insightful market researcg reports. AI/ML + FinTech Engineering
