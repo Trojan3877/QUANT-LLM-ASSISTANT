@@ -1,6 +1,11 @@
 # LLM-Powered Quantitative Research Assistant
 
-[![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)  
+[![CI Status](https://github.com/Trojan3877/quant-llm-assistant/actions/workflows/ci.yml/badge.svg)](https://github.com/Trojan3877/quant-llm-assistant/actions/workflows/ci.yml)
+[![Docker Pulls](https://img.shields.io/docker/pulls/trojan3877/quant-llm-assistant)](https://hub.docker.com/r/trojan3877/quant-llm-assistant)
+[![Helm Chart Version](https://img.shields.io/helm/v/quant-llm-assistant?repository_url=https://github.com/Trojan3877/quant-llm-assistant)](https://github.com/Trojan3877/quant-llm-assistant/tree/main/helm/quant-llm-assistant)
+[![Documentation](https://img.shields.io/badge/docs-latest-blue)](https://github.com/Trojan3877/quant-llm-assistant/tree/main/docs)
+[![Issues](https://img.shields.io/github/issues/Trojan3877/quant-llm-assistant)](https://github.com/Trojan3877/quant-llm-assistant/issues)
+[![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 A Python tool that leverages large language models to fetch, analyze, and report on financial market data via natural-language prompts. Ideal for quant analysts, data scientists, and anyone wanting ad-hoc financial insights.
@@ -29,3 +34,4 @@ A Python tool that leverages large language models to fetch, analyze, and report
    ```bash
    git clone git@github.com:Trojan3877/quant-llm-assistant.git
    cd quant-llm-assistant
+
