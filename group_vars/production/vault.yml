@@ -1,0 +1,3 @@
+# store sensitive vars encrypted with ansible-vault
+db_password: SUPER_SECRET_PWD
+api_key: YOUR_API_KEY_HERE
