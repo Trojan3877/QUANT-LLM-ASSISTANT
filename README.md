@@ -52,6 +52,35 @@ quant-llm-assistant/
 └── requirements.txt
 
 
+your-repo/
+└── ansible/
+    ├── ansible.cfg
+    ├── inventories/
+    │   ├── staging.ini
+    │   └── production.ini
+    ├── group_vars/
+    │   └── production/
+    │       └── vault.yml      # encrypted via `ansible-vault`
+    ├── roles/
+    │   ├── docker/
+    │   │   ├── defaults/
+    │   │   │   └── main.yml
+    │   │   └── tasks/
+    │   │       └── main.yml
+    │   └── app_deploy/
+    │       ├── tasks/
+    │       │   └── main.yml
+    │       └── templates/
+    │           └── llm_quant.service.j2
+    └── playbook.yml
+
+
+
+
+
+
+
+
 
 
 
