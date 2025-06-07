@@ -10,6 +10,11 @@
 
 A Python tool that leverages large language models to fetch, analyze, and report on financial market data via natural-language prompts. Ideal for quant analysts, data scientists, and anyone wanting ad-hoc financial insights.
 
+![Uploading image.png…]()
+
+
+
+
 ---
 
 ## 🚀 Features
