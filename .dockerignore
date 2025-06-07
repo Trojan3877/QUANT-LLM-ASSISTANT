@@ -1,0 +1,36 @@
+# Byte-compiled / optimized files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Environment files
+.env
+.env.*
+
+# Git
+.git
+.gitignore
+
+# Reports and outputs
+reports/
+*.md
+
+# Docker
+Dockerfile
+docker-compose.yml
+
+# IDEs and editors
+.vscode/
+.idea/
+
+git add .dockerignore
+git commit -m "Add .dockerignore to optimize Docker builds"
