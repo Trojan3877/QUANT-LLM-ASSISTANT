@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: quant-llm-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: quant.example.com          # replace with your domain
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: quant-llm-service  # must match your Service name
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - quant.example.com
+      secretName: quant-llm-tls        # TLS secret must exist in this namespace
+
+git add k8s/ingress.yaml
+git commit -m "Add Kubernetes Ingress manifest"
