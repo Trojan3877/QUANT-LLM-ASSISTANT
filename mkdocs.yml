@@ -1,0 +1,18 @@
+site_name: Quant LLM Assistant Documentation
+nav:
+  - Home: index.md
+  - Getting Started: getting_started.md
+  - API Reference:
+      - Config: api/config.md
+      - Data Client: api/data_client.md
+      - LLM Agent: api/llm_agent.md
+      - Plotting: api/plotting.md
+      - Report: api/report.md
+      - Backtest: api/backtest.md
+theme:
+  name: material
+docs_dir: docs
+site_dir: site
+
+git add mkdocs.yml
+git commit -m "Add MkDocs configuration for documentation site"
