@@ -1,0 +1,13 @@
+---
+- name: Deploy LLM Quant Assistant to {{ inventory_hostname }}
+  hosts: quant-servers
+  become: true
+
+  vars_files:
+    - group_vars/production/vault.yml
+
+  roles:
+    - docker
+
+  roles:
+    - role: app_deploy
