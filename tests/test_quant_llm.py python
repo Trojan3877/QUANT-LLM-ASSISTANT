@@ -1,0 +1,21 @@
+# tests/test_quant_llm.py
+
+import unittest
+from llm_pipeline import preprocess_query, generate_response
+
+class TestQuantLLMAssistant(unittest.TestCase):
+
+    def test_preprocessing(self):
+        raw_query = "What's the Sharpe ratio of TSLA last quarter?"
+        processed = preprocess_query(raw_query)
+        self.assertIsInstance(processed, str)
+        self.assertGreater(len(processed), 5)
+
+    def test_response_generation(self):
+        query = "Expected return of AAPL?"
+        response = generate_response(query)
+        self.assertIn("AAPL", response)
+        self.assertGreater(len(response), 10)
+
+if __name__ == "__main__":
+    unittest.main()
