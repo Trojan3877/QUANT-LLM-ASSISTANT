@@ -1,4 +1,5 @@
 # 🤖 Quant LLM Assistant
+https://codecov.io/gh/Trojan3877/Quant-LLM-Assistant/branch/main/graph/badge.svg
 
 ![Capstone](https://img.shields.io/badge/Project-Type--Capstone-blueviolet)
 ![Language](https://img.shields.io/badge/Language-Python-blue)
