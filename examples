@@ -1,0 +1,11 @@
+{
+  "query": "What is the volatility of the S&P 500 this year?",
+  "model": "gpt-3.5-turbo",
+  "top_n": 1
+}
+
+{
+  "response": "As of Q2 2025, the annualized volatility of the S&P 500 is approximately 18.7%. This is based on a 252-trading day window and reflects post-Fed rate cycle trends.",
+  "confidence": 0.91,
+  "source": "Bloomberg API"
+}
