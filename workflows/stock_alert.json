@@ -1,0 +1,57 @@
+{
+  "name": "Stock Alert Workflow",
+  "nodes": [
+    {
+      "id": "1",
+      "name": "Stock Symbol Input",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "values": [
+          {
+            "name": "symbol",
+            "value": "AAPL"
+          }
+        ]
+      },
+      "position": [200, 200]
+    },
+    {
+      "id": "2",
+      "name": "Fetch Stock Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "url": "https://query1.finance.yahoo.com/v7/finance/quote",
+        "method": "GET",
+        "queryParametersUi": {
+          "parameter": [
+            {
+              "name": "symbols",
+              "value": "={{$json[\"symbol\"]}}"
+            }
+          ]
+        }
+      },
+      "position": [500, 200]
+    },
+    {
+      "id": "3",
+      "name": "Send to Slack",
+      "type": "n8n-nodes-base.slack",
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#stock-alerts",
+        "text": "Stock {{ $json[\"quoteResponse\"][\"result\"][0][\"symbol\"] }} is currently trading at {{ $json[\"quoteResponse\"][\"result\"][0][\"regularMarketPrice\"] }} {{ $json[\"quoteResponse\"][\"result\"][0][\"currency\"] }}"
+      },
+      "position": [800, 200]
+    }
+  ],
+  "connections": {
+    "Stock Symbol Input": {
+      "main": [[{"node": "Fetch Stock Data", "type": "main", "index": 0}]]
+    },
+    "Fetch Stock Data": {
+      "main": [[{"node": "Send to Slack", "type": "main", "index": 0}]]
+    }
+  }
+}
