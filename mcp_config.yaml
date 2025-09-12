@@ -1,0 +1,17 @@
+# mcp_config.yaml
+# Model Context Protocol configuration for Quant LLM Assistant
+
+version: 1
+agent:
+  name: Quant LLM Assistant
+  description: >
+    An AI-powered financial assistant that retrieves, analyzes,
+    and summarizes stock market data for decision support.
+
+tools:
+  - name: get_stock_data
+    type: api
+    description: Fetch real-time stock price data.
+    endpoint: "https://query1.finance.yahoo.com/v7/finance/quote"
+    params:
+      - symbol
