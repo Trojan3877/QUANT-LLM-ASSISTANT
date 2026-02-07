@@ -1,4 +1,4 @@
-## 🏷️ Badges
+
 ![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)  
 ![MCP Enabled](https://img.shields.io/badge/MCP-Enabled-brightgreen?logo=protocols)  
 ![n8n Automation](https://img.shields.io/badge/n8n-Workflow-orange?logo=n8n)  
