@@ -35,12 +35,14 @@ def run(iterations: int = 100, rows: int = 1_000, repeats: int = 5) -> list[floa
         {"close": [100.0 + (index % 20) for index in range(rows)]},
         index=pd.date_range("2020-01-01", periods=rows, freq="min"),
     )
-    strategy = lambda data: pd.Series(1, index=data.index)
+    def always_long(data: pd.DataFrame) -> pd.Series:
+        return pd.Series(1, index=data.index)
+
     samples: list[float] = []
     for _ in range(repeats):
         started = time.perf_counter()
         for _ in range(iterations):
-            BacktestEngine(frame, strategy).run()
+            BacktestEngine(frame, always_long).run()
         samples.append((time.perf_counter() - started) / iterations)
     return samples
 
@@ -57,7 +59,7 @@ def resolve_commit() -> str | None:
     if github_sha := os.environ.get("GITHUB_SHA"):
         return github_sha
     try:
-        result = subprocess.run(
+        result = subprocess.run(  # noqa: S603 -- command and arguments are static
             ["git", "rev-parse", "HEAD"],
             check=True,
             capture_output=True,
