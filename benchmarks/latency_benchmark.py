@@ -7,11 +7,12 @@ import json
 import math
 import os
 import platform
+import shutil
 import statistics
 import subprocess
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -58,9 +59,12 @@ def resolve_commit() -> str | None:
     """Resolve the evidence commit without failing local benchmark execution."""
     if github_sha := os.environ.get("GITHUB_SHA"):
         return github_sha
+    git_executable = shutil.which("git")
+    if git_executable is None:
+        return None
     try:
         result = subprocess.run(  # noqa: S603 -- command and arguments are static
-            ["git", "rev-parse", "HEAD"],
+            [git_executable, "rev-parse", "HEAD"],
             check=True,
             capture_output=True,
             text=True,
@@ -84,7 +88,7 @@ def build_evidence(
     return {
         "schema_version": 1,
         "commit": commit if commit is not None else resolve_commit(),
-        "recorded_at_utc": datetime.now(timezone.utc).isoformat(),
+        "recorded_at_utc": datetime.now(UTC).isoformat(),
         "workload": {
             "rows": rows,
             "iterations_per_sample": iterations,
@@ -113,7 +117,9 @@ def write_evidence(path: Path, evidence: dict[str, Any]) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Measure deterministic BacktestEngine latency and optionally retain JSON evidence."
+        description=(
+            "Measure deterministic BacktestEngine latency and optionally retain JSON evidence."
+        )
     )
     parser.add_argument("--max-seconds", type=float, default=0.25)
     parser.add_argument("--iterations", type=_positive_int, default=100)
