@@ -2,11 +2,6 @@
 
 [![CI](https://github.com/CoreyLeath-code/QUANT-LLM-ASSISTANT/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/CoreyLeath-code/QUANT-LLM-ASSISTANT/actions/workflows/ci.yml)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Coverage 90%+](https://img.shields.io/badge/coverage-90%25%2B-brightgreen)](#quality-gates)
-[![Ruff](https://img.shields.io/badge/lint-Ruff-D7FF64?logo=ruff&logoColor=261230)](https://docs.astral.sh/ruff/)
-[![MyPy](https://img.shields.io/badge/types-MyPy-2A6DB2)](https://mypy.readthedocs.io/)
-[![Bandit](https://img.shields.io/badge/SAST-Bandit-yellow)](https://bandit.readthedocs.io/)
-[![Docker](https://img.shields.io/badge/container-Docker-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 A guardrailed command-line assistant for quantitative research. It validates external market data,
@@ -14,58 +9,32 @@ adds dated observations to an explicit LLM trust boundary, and provides a determ
 for research examples. It does **not** execute orders, manage portfolios, or provide personalized
 investment advice.
 
-> **Status:** Production-hardened research CLI. The core package, CI gates, and container are
-> operational. Automated deployment is intentionally disabled until a target environment, registry,
-> secret store, and approval policy are selected.
+> **Status:** Research CLI with required quality, security, container, and deterministic benchmark gates. It has no configured deployment target and does not execute orders or provide investment advice.
 
+## Reproducible benchmark evidence
 
-## Production Readiness Guide
+The latency check measures only the deterministic `BacktestEngine` workload; it is a regression budget, not a trading-performance, capacity, or product-SLO claim. This README intentionally contains no benchmark result because runner-dependent values must be reviewed from the exact workflow run and commit.
 
-> This section is the portfolio audit entry point for **QUANT-LLM-ASSISTANT**. It describes an engineering promotion path; it is not a claim that the repository is already production-authorized.
-
-[![CI](https://img.shields.io/github/actions/workflow/status/CoreyLeath-code/QUANT-LLM-ASSISTANT/ci.yml?branch=main&label=CI)](https://github.com/CoreyLeath-code/QUANT-LLM-ASSISTANT/actions) [![License](https://img.shields.io/github/license/CoreyLeath-code/QUANT-LLM-ASSISTANT)](https://github.com/CoreyLeath-code/QUANT-LLM-ASSISTANT/blob/main/LICENSE)
-
-### Architecture flowchart
-
-```mermaid
-flowchart LR
-    Client --> Gateway --> Services[API + workers] --> Events[(Event bus)] --> Store[(State)]
-```
-
-### Quickstart and local validation
-
-The supported local path should be reproducible from a clean checkout. The inferred stack for this repository is **Python/platform services**.
+Run the same evidence-producing command locally:
 
 ```bash
-python -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt
-pytest -q
+python -m benchmarks.latency_benchmark \
+  --max-seconds 0.25 \
+  --output artifacts/latency-benchmark.json
 ```
 
-If the project uses external services, model artifacts, cloud credentials, or private data, start them through documented local fixtures or mocks. Never place secrets or identifiable records in the repository.
+The command emits a versioned JSON record rather than a screenshot or an untracked console value.
 
-### Research-style metrics and benchmarks
+| Evidence field | Meaning |
+| --- | --- |
+| `commit` | `GITHUB_SHA` in Actions, otherwise the local Git `HEAD` when available |
+| `workload` | Rows, timing iterations, sample count, and fixed strategy |
+| `samples_seconds_per_backtest` | Raw timing samples for the invocation |
+| `summary_seconds_per_backtest` | Mean, median, nearest-rank p95, and maximum |
+| `runner` | Python and platform information needed for like-for-like comparison |
+| `threshold_seconds_per_backtest` | The CI regression limit applied to the mean |
 
-| Evidence | Required record |
-|---|---|
-| Correctness | Test command, commit SHA, runtime, and pass/fail result |
-| Performance | Warm-up, sample count, concurrency, median, p95, p99, throughput, and memory |
-| Data/model quality | Dataset version, split strategy, leakage controls, calibration, subgroup results, and uncertainty |
-| Runtime | Image digest, health-check latency, resource limits, and rollback target |
-| Security | Dependency, secret, SAST, container, and SBOM results |
-
-A benchmark number belongs in a versioned artifact tied to a commit and hardware/runtime description. Engineering benchmarks must not be presented as clinical, financial, safety, or model-quality validation without the appropriate domain evidence.
-
-### Extended Q&A
-
-**What is production-ready for this repository?**  
-A reproducible build, tested public contract, controlled configuration, observable runtime, documented security boundary, versioned artifacts, and a tested rollback path.
-
-**What must remain explicit?**  
-The intended use, excluded use, data/credential handling, model or algorithm limitations, and which metrics are measured versus aspirational.
-
-**What should be completed next?**  
-Use the linked production-readiness issue for this repository as the checklist. Resolve missing tests, deployment instructions, observability, supply-chain controls, and release evidence before attaching a production claim.
-
+For every pull request, CI generates `artifacts/latency-benchmark.json`, fails when its mean exceeds `0.25` seconds per backtest, and retains the file as the `latency-benchmark-<commit>` workflow artifact for 30 days. Triggering CI manually is also supported; no live market or model credentials are required for this measurement.
 
 ## Why this repository exists
 
@@ -254,12 +223,12 @@ logs. Operational response procedures are in
 The same commands used by CI can be run locally:
 
 ```bash
-ruff check src tests
+ruff check src tests benchmarks
 mypy src/config.py src/data_client.py src/llm_agent.py
 python -m pytest
 bandit -r src -q
 pip-audit
-python -m benchmarks.latency_benchmark --max-seconds 0.25
+python -m benchmarks.latency_benchmark --max-seconds 0.25 --output artifacts/latency-benchmark.json
 docker build -t quant-llm-assistant:local .
 docker run --rm quant-llm-assistant:local --help
 ```
@@ -271,7 +240,7 @@ docker run --rm quant-llm-assistant:local --help
 | Lint | Ruff errors fail the build; no warning-to-success conversion |
 | Types | Strict MyPy on external-boundary modules |
 | Security | Bandit and `pip-audit` must report no blocking findings |
-| Performance | Mean 1,000-row backtest latency must remain below a 250 ms CI budget |
+| Performance | Five timing samples of a deterministic 1,000-row workload are recorded; the mean must remain at or below the 250 ms CI regression budget |
 | Container | Image build and `--help` smoke test must pass |
 
 The latency threshold is a regression detector, not a production SLO or throughput claim. Current

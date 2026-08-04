@@ -1,7 +1,8 @@
-"""Small, deterministic backtesting engine for researchâ€”not trade execution."""
+"""Small, deterministic backtesting engine for research—not trade execution."""
 
 from __future__ import annotations
 
+import math
 from collections.abc import Callable
 from typing import Any
 
@@ -20,7 +21,7 @@ class BacktestEngine:
         if not price_data.index.is_unique or not price_data.index.is_monotonic_increasing:
             raise ValueError("price_data index must be unique and ordered")
         closes = pd.to_numeric(price_data["close"], errors="coerce")
-        if closes.isna().any() or (closes <= 0).any():
+        if closes.isna().any() or not closes.map(math.isfinite).all() or (closes <= 0).any():
             raise ValueError("close prices must be finite positive numbers")
         if initial_cash <= 0:
             raise ValueError("initial_cash must be positive")
@@ -46,8 +47,13 @@ class BacktestEngine:
                 position = target
             holdings = position * price
             equity.append(
-                {"timestamp": timestamp, "cash": cash, "position": position,
-                 "holdings": holdings, "total": cash + holdings}
+                {
+                    "timestamp": timestamp,
+                    "cash": cash,
+                    "position": position,
+                    "holdings": holdings,
+                    "total": cash + holdings,
+                }
             )
         self.equity_curve = pd.DataFrame(equity).set_index("timestamp")
         return self.equity_curve.copy()

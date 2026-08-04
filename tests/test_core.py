@@ -59,7 +59,9 @@ def test_symbol_rejects_untrusted_input(raw):
 
 def client_for(payload):
     return DataClient(
-        base_url="https://example.com/query", api_key="key", timeout=3,
+        base_url="https://example.com/query",
+        api_key="key",
+        timeout=3,
         session=Session(Response(payload)),
     )
 
@@ -109,6 +111,13 @@ def test_backtest_rejects_invalid_inputs_and_signals():
         engine.run()
     with pytest.raises(RuntimeError):
         engine.stats()
+
+
+def test_backtest_rejects_non_finite_prices():
+    non_finite = prices()
+    non_finite.iloc[1, 0] = float("inf")
+    with pytest.raises(ValueError, match="finite positive"):
+        BacktestEngine(non_finite, lambda frame: pd.Series(1, index=frame.index))
 
 
 class CompletionClient:
