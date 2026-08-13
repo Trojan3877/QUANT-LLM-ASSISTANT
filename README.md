@@ -1,15 +1,38 @@
-# Quant LLM Assistant
+# Quant LLM Assistant — Trust-Bounded Quantitative Research CLI
 
 [![CI](https://github.com/CoreyLeath-code/QUANT-LLM-ASSISTANT/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/CoreyLeath-code/QUANT-LLM-ASSISTANT/actions/workflows/ci.yml)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Deterministic workload](https://img.shields.io/badge/benchmark_workload-1%2C000_rows-6f42c1)](benchmarks/latency_benchmark.py)
+[![CI mean budget](https://img.shields.io/badge/CI_mean_budget-%E2%89%A4250_ms-2ea44f)](benchmarks/latency_benchmark.py)
+[![Research only](https://img.shields.io/badge/scope-research_only-6b7280)](#license-and-disclaimer)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-A guardrailed command-line assistant for quantitative research. It validates external market data,
-adds dated observations to an explicit LLM trust boundary, and provides a deterministic backtester
-for research examples. It does **not** execute orders, manage portfolios, or provide personalized
-investment advice.
+## Abstract
 
-> **Status:** Research CLI with required quality, security, container, and deterministic benchmark gates. It has no configured deployment target and does not execute orders or provide investment advice.
+Quant LLM Assistant is a research CLI that validates external market-data responses, labels dated observations as untrusted context for an LLM, and implements a deterministic single-instrument backtest. It does **not** execute orders, manage portfolios, or provide personalized investment advice.
+
+The direct quantitative method is accounting over a supplied close-price sequence and a long/flat/short position signal. CI benchmarks its fixed synthetic workload and writes commit-bound timing evidence; those measurements are regression evidence, not trading performance, capacity, model accuracy, or a production SLO.
+
+## Formal backtest logic
+
+Let $C_t>0$ be the close at time $t$, $s_t\in\{-1,0,1\}$ the target position, and $K_0>0$ the initial cash. When the target changes, the engine accounts for the prior position and the target position at the current close:
+
+\[
+K_t=K_{t-1}+s_{t-1}C_t-s_tC_t,\qquad H_t=s_tC_t,\qquad E_t=K_t+H_t.
+\]
+
+It reports total return $E_T/K_0-1$ and maximum drawdown $\min_t(E_t/\max_{u\leq t}E_u-1)$. These formulas map directly to [src/backtest.py](src/backtest.py), including its strict data and signal invariants. They intentionally omit costs, spread, slippage, liquidity, margin, taxes, corporate actions, and execution delay.
+
+Read the complete [mathematical foundations](docs/MATHEMATICAL_FOUNDATIONS.md) and [complexity analysis](docs/COMPLEXITY_ANALYSIS.md).
+
+## Research questions
+
+1. Under a chronological, leakage-controlled protocol, how do supplied signals compare with cash and buy-and-hold?
+2. How sensitive are return and drawdown to signal timing and the trade-at-close convention?
+3. How do fees, spread, slippage, and borrow costs change the illustrative accounting results?
+4. How does deterministic backtest latency scale with price rows and strategy-computation cost?
+
+These questions are intentionally unanswered by the current repository: no versioned market dataset, out-of-sample evaluation, or financial-performance result is committed. The [academic audit](docs/ACADEMIC_AUDIT.md) documents the evidence, limitations, and next experiments.
 
 ## Reproducible benchmark evidence
 
